@@ -1,5 +1,8 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <list>
+#include <map>
 
 using namespace std;
 
@@ -176,9 +179,72 @@ int mainSencillo()
 
 }
 
+class Numero
+{
+public:
+    int x;
+    Numero(int x)
+    {
+        this->x=x;
+    }
+};
+
+void mainSTL()
+{
+    //Vector
+    cout<<"Vector"<<endl;
+    vector<Numero*> mi_vector;
+    mi_vector.push_back(new Numero(5));
+    mi_vector.push_back(new Numero(8));
+    mi_vector.push_back(new Numero(3));
+    mi_vector.push_back(new Numero(1));
+    mi_vector.pop_back();
+    for(int i=0;i<mi_vector.size();i++)
+    {
+        cout<<mi_vector[i]->x<<endl;
+    }
+
+    //Lista
+    cout<<"Lista"<<endl;
+    list<int> mi_lista;
+    list<int>::iterator mi_iterador;
+    mi_lista.push_back(6);
+    mi_lista.push_back(8);
+    mi_lista.push_front(2);
+
+    mi_iterador=mi_lista.begin();
+    for(int i=0;i<2;i++)
+        mi_iterador++;
+
+    mi_lista.insert(mi_iterador,15);
+
+    for(mi_iterador=mi_lista.begin();
+        mi_iterador!=mi_lista.end();
+        mi_iterador++)
+    {
+        cout<<*mi_iterador<<endl;
+    }
+
+    //map
+    cout<<"Mapa"<<endl;
+    map<string,int>mi_mapa;
+    mi_mapa["hola"]=16;
+    mi_mapa["mundo"]=32;
+    cout<<mi_mapa["hola"]<<endl;
+    cout<<mi_mapa["mundo"]<<endl;
+    map<string,int>::iterator iterador_mapa;
+    for(iterador_mapa=mi_mapa.begin();
+        iterador_mapa!=mi_mapa.end();
+        iterador_mapa++)
+    {
+        cout<<iterador_mapa->first<<" ";
+        cout<<iterador_mapa->second<<endl;
+    }
+}
+
 int main()
 {
-    mainPokemones();
+    mainSTL();
 
     return 0;
 }
