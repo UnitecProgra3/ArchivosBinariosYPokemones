@@ -386,9 +386,101 @@ void mainArbol()
     cout<< a.estaOrdenado(a.raiz);
 }
 
+class NodoNario
+{
+public:
+    int num;
+    vector<NodoNario*>hijos;
+    NodoNario(int num)
+    {
+        this->num = num;
+    }
+};
+
+class ArbolNario
+{
+public:
+    NodoNario* raiz;
+    ArbolNario()
+    {
+        vector<NodoNario*>nodos;
+        nodos.push_back(new NodoNario(1));
+        nodos.push_back(new NodoNario(2));
+        nodos.push_back(new NodoNario(3));
+        nodos.push_back(new NodoNario(4));
+        nodos.push_back(new NodoNario(5));
+        nodos.push_back(new NodoNario(6));
+        nodos.push_back(new NodoNario(7));
+
+        raiz = nodos[0];
+        nodos[0]->hijos.push_back(nodos[1]);
+        nodos[0]->hijos.push_back(nodos[4]);
+        nodos[0]->hijos.push_back(nodos[5]);
+
+        nodos[1]->hijos.push_back(nodos[2]);
+
+        nodos[4]->hijos.push_back(nodos[3]);
+        nodos[4]->hijos.push_back(nodos[6]);
+    }
+
+    void imprimir(NodoNario* raiz)
+    {
+        if(raiz == NULL)
+        {
+            return;
+        }
+        cout<<raiz->num<<endl;
+        for(int i=0;i<raiz->hijos.size();i++)
+            imprimir(raiz->hijos[i]);
+    }
+};
+
+int mainArbolNario()
+{
+    ArbolNario an;
+    an.imprimir(an.raiz);
+}
+
+class NodoExamen
+{
+public:
+    int num;
+    string str;
+    vector<NodoExamen*>hijos;
+    NodoExamen(int num, string str)
+    {
+        this->num = num;
+        this->str = str;
+    }
+};
+
+class ArbolExamen
+{
+public:
+    NodoExamen* raiz;
+    ArbolExamen()
+    {
+
+    }
+    void leer(string path)
+    {
+
+    }
+    void escribir(string path)
+    {
+
+    }
+    void imprimir(NodoExamen* raiz)
+    {
+    }
+};
+
 int main()
 {
-    mainArbol();
+    ArbolExamen a;
+    a.leer("arbol.txt");
+    a.escribir("arbol.txt");
+    a.imprimir(a.raiz);
 
     return 0;
 }
