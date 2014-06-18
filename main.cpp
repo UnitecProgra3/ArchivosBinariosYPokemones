@@ -242,9 +242,153 @@ void mainSTL()
     }
 }
 
+class Nodo
+{
+public:
+    int num;
+    Nodo* izq;
+    Nodo* der;
+    Nodo(int num)
+    {
+        this->num = num;
+        this->izq = 0;
+        this->der = 0;
+    }
+};
+
+class Arbol
+{
+public:
+    Nodo* raiz;
+    Arbol()
+    {
+        Nodo*n1 = new Nodo(2);
+        Nodo*n2 = new Nodo(2);
+        Nodo*n3 = new Nodo(3);
+        Nodo*n4 = new Nodo(4);
+        Nodo*n5 = new Nodo(5);
+        Nodo*n6 = new Nodo(6);
+
+        raiz = n4;
+        n4->izq = n2;
+        n4->der = n5;
+        n5->izq = n3;
+        n5->der = n6;
+        n3->izq = n1;
+    }
+
+    void imprimir(Nodo* raiz)
+    {
+        if(raiz==NULL)
+        {
+            cout<<"LLegue a una rama!"<<endl;
+            return;
+        }
+
+        cout<<raiz->num<<endl;
+
+        imprimir(raiz->der);
+        imprimir(raiz->izq);
+    }
+
+    int suma(Nodo* raiz)
+    {
+        if(raiz == NULL)
+        {
+            return 0;
+        }
+
+        int suma_der = suma(raiz->der);
+        int suma_izq = suma(raiz->izq);
+        int res = suma_der + suma_izq + raiz->num;
+        return res;
+    }
+
+    int getMenor(Nodo* raiz)
+    {
+        if(raiz==NULL)
+        {
+            return 999999;
+        }
+
+        int num_raiz=raiz->num;
+        int menor_izq = getMenor(raiz->izq);
+        int menor_der = getMenor(raiz->der);
+
+        if(num_raiz<menor_izq && num_raiz<menor_der)
+            return num_raiz;
+        if(menor_izq<num_raiz && menor_izq<menor_der)
+            return menor_izq;
+
+        return menor_der;
+    }
+
+
+    int getMayor(Nodo* raiz)
+    {
+        if(raiz==NULL)
+        {
+            return -999999;
+        }
+
+        int num_raiz=raiz->num;
+        int menor_izq = getMayor(raiz->izq);
+        int menor_der = getMayor(raiz->der);
+
+        if(num_raiz>menor_izq && num_raiz>menor_der)
+            return num_raiz;
+        if(menor_izq>num_raiz && menor_izq>menor_der)
+            return menor_izq;
+
+        return menor_der;
+    }
+
+    bool estaOrdenado(Nodo* raiz)
+    {
+        if(raiz==NULL)
+        {
+            return true;
+        }
+
+        bool mayor_izq = false;
+        if(raiz->izq == NULL)
+        {
+            mayor_izq = true;
+        }else if(raiz->num > raiz->izq->num)
+        {
+            mayor_izq = true;
+        }
+
+        if(!estaOrdenado(raiz->izq))
+            return false;
+        if(!estaOrdenado(raiz->der))
+            return false;
+
+        bool menor_der = false;
+        if(raiz->der == NULL)
+        {
+            menor_der = true;
+        }else if(raiz->num < raiz->der->num)
+        {
+            menor_der = true;
+        }
+
+        if(menor_der && mayor_izq)
+            return true;
+
+        return false;
+    }
+};
+
+void mainArbol()
+{
+    Arbol a;
+    cout<< a.estaOrdenado(a.raiz);
+}
+
 int main()
 {
-    mainSTL();
+    mainArbol();
 
     return 0;
 }

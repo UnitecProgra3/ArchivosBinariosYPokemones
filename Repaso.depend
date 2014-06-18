@@ -1,5 +1,8 @@
 # depslib dependency file v1.0
-1402510469 source:/home/turupawn/Projects/Codeblocks/Clases/Repaso/main.cpp
+1403029381 source:/home/turupawn/Projects/Codeblocks/Clases/Repaso/main.cpp
 	<iostream>
 	<fstream>
+	<vector>
+	<list>
+	<map>
 
