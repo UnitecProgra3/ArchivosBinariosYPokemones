@@ -3,6 +3,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <string.h>
 
 using namespace std;
 
@@ -454,32 +455,154 @@ public:
     }
 };
 
+class Flechita
+{
+public:
+    int padre;
+    int hijo;
+    Flechita(int padre,int hijo)
+    {
+        this->padre = padre;
+        this->hijo = hijo;
+    }
+};
+
 class ArbolExamen
 {
 public:
     NodoExamen* raiz;
+    vector<NodoExamen*> vector_nodos;
+    vector<Flechita*> vector_flechitas;
     ArbolExamen()
     {
+        vector<NodoExamen*>nodos;
+        nodos.push_back(new NodoExamen(1,"A"));
+        nodos.push_back(new NodoExamen(2,"B"));
+        nodos.push_back(new NodoExamen(3,"C"));
+        nodos.push_back(new NodoExamen(4,"D"));
+        nodos.push_back(new NodoExamen(5,"E"));
+        nodos.push_back(new NodoExamen(6,"F"));
+        nodos.push_back(new NodoExamen(7,"G"));
 
+        raiz = nodos[0];
+        nodos[0]->hijos.push_back(nodos[1]);
+        nodos[0]->hijos.push_back(nodos[4]);
+        nodos[0]->hijos.push_back(nodos[5]);
+
+        nodos[1]->hijos.push_back(nodos[2]);
+
+        nodos[4]->hijos.push_back(nodos[3]);
+        nodos[4]->hijos.push_back(nodos[6]);
     }
     void leer(string path)
     {
+        //Limpio los vectores
+        vector_nodos.clear();
 
+        //Creo mi ifstream y averiguo su tamano
+        ifstream in(path.c_str());
+        in.seekg(0,ios::end);
+        int size_archivo=in.tellg();
+        in.seekg(0,ios::beg);
+
+        //Leo los nodos
+        while(true)
+        {
+            int num;
+            string str;
+
+            //Leo int
+            in.read((char*)&num,4);
+            if(num==0)
+                break;
+
+            //Leo string
+            char str_char[20];
+            in.read(str_char,20);
+            str = string(str_char);
+
+            //Agrego a vector
+            vector_nodos.push_back(new NodoExamen(num,str));
+        }
+
+        raiz=vector_nodos[0];
+
+        //Leo las flechitas
+        while(in.tellg()<size_archivo)
+        {
+            int padre;
+            int hijo;
+            in.read((char*)&padre,4);
+            in.read((char*)&hijo,4);
+            vector_nodos[padre]->hijos.push_back(vector_nodos[hijo]);
+        }
     }
+
     void escribir(string path)
     {
+        vector_nodos.clear();
+        vector_flechitas.clear();
 
+        llenarVectores(raiz,-1);
+
+        ofstream out(path.c_str());
+        for(int i=0;i<vector_nodos.size();i++)
+        {
+            int num;
+            char str[20];
+            num = vector_nodos[i]->num;
+            strcpy(str,vector_nodos[i]->str.c_str());
+
+            out.write((char*)&num,4);
+            out.write(str,20);
+        }
+        int x=0;
+        out.write((char*)&x,4);
+        for(int i=0;i<vector_flechitas.size();i++)
+        {
+            out.write((char*)&vector_flechitas[i]->padre,4);
+            out.write((char*)&vector_flechitas[i]->hijo,4);
+        }
+
+        out.close();
     }
+
+    void llenarVectores(NodoExamen* raiz,int padre)
+    {
+        if(raiz == NULL)
+        {
+            return;
+        }
+        vector_nodos.push_back(raiz);
+        int mi_posicion = vector_nodos.size()-1;
+        if(padre!=-1)
+            vector_flechitas.push_back(new Flechita(padre,mi_posicion));
+        for(int i=0;i<raiz->hijos.size();i++)
+            llenarVectores(raiz->hijos[i],mi_posicion);
+    }
+
     void imprimir(NodoExamen* raiz)
     {
+        if(raiz == NULL)
+        {
+            return;
+        }
+        cout<<raiz->num<<","<<raiz->str<<endl;
+        for(int i=0;i<raiz->hijos.size();i++)
+            imprimir(raiz->hijos[i]);
     }
 };
+
+template <typename Type>
+Type max(Type a, Type b) {
+    return a > b ? a : b;
+}
 
 int main()
 {
     ArbolExamen a;
-    a.leer("arbol.txt");
     a.escribir("arbol.txt");
+    a.leer("arbol.txt");
     a.imprimir(a.raiz);
 
     return 0;
